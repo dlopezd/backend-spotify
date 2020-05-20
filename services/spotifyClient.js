@@ -2,7 +2,7 @@ const config = require('config');
 const axios = require('axios')
 const qs = require('qs');
 
-const baseUrlApi = config.rest_endpoints.spotify;
+const baseUrlApi = config.rest_endpoints.spotify_api;
 const baseUrlAccounts = config.rest_endpoints.spotify_accounts
 
 const getToken = async _ => {
@@ -31,4 +31,23 @@ const getToken = async _ => {
     }
 }
 
+const search = async (searchInfo, authorizationInfo) => {
+
+    let path = "search?" + qs.stringify(searchInfo);
+
+    try {
+        const headers = {
+            "Authorization": `Bearer ${authorizationInfo.access_token}`
+        };
+
+        const response = await axios.get(baseUrlApi + path, { headers })
+        return response.data;
+    }
+    catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
+module.exports.search = search;
 module.exports.getToken = getToken;
