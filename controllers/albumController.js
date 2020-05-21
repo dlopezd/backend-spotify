@@ -5,21 +5,22 @@ const { models } = require('../data_access/sequelize');
 
 
 exports.find = async (req, res, next) => {
-    try {
+    const searchInfo = {
+        q: req.query.q,
+        type: "album",
+        market: req.query.market,
+        limit: req.query.limit,
+        offset: req.query.offset
+    }
 
-        if(!req.query.q) {
-            let error =  new Error("Parámetros no válidos");
+    try {
+        if (!req.query.q) {
+            console.error("Request sin parámetro 'q'");
+            let error = new Error("Parámetros no válidos");
             error.statusCode = 400;
             throw error;
         }
 
-        const searchInfo = {
-            q: req.query.q,
-            type: "album",
-            market: req.query.market,
-            limit: req.query.limit,
-            offset: req.query.offset
-        }
         let albumsSpotify = await spotifyClient.search(searchInfo, req.authorizationInfo)
 
         let albumsDb = await saveAlbumsOnDb(albumsSpotify);
@@ -27,6 +28,8 @@ exports.find = async (req, res, next) => {
         res.send({ ok: true, error: null, data: albumsDb });
     }
     catch (error) {
+        console.error(`[albumController.find] param:${JSON.stringify(searchInfo)} error:${error.message}`);
+        
         if (!error.statusCode) {
             error.statusCode = 500;
         }
