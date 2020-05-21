@@ -2,6 +2,7 @@ const config = require('config');
 const axios = require('axios')
 const qs = require('qs');
 
+
 const baseUrlApi = config.rest_endpoints.spotify_api;
 const baseUrlAccounts = config.rest_endpoints.spotify_accounts
 
@@ -27,7 +28,9 @@ const getToken = async _ => {
         return response.data;
 
     } catch (error) {
-        console.log(error);
+        let err = new Error("Error al obtener token desde spotify");
+        err.statusCode = 503;
+        throw err;
     }
 }
 
@@ -44,8 +47,9 @@ const search = async (searchInfo, authorizationInfo) => {
         return response.data;
     }
     catch (error) {
-        console.log(error);
-        return error;
+        let err = new Error("Error al obtener álbumes desde spotify");
+        err.statusCode = 503;
+        throw err;
     }
 }
 

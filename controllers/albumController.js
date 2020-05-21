@@ -1,4 +1,4 @@
-const moment = require('moment');
+const NodeCache = require("node-cache");
 
 const spotifyClient = require('../services/spotifyClient');
 const { models } = require('../data_access/sequelize');
@@ -6,7 +6,6 @@ const { models } = require('../data_access/sequelize');
 
 exports.find = async (req, res) => {
     try {
-        let authorizationInfo = await spotifyClient.getToken();
 
         const searchInfo = {
             q: req.query.q,
@@ -15,13 +14,17 @@ exports.find = async (req, res) => {
             limit: req.query.limit,
             offset: req.query.offset
         }
-        let albumsSpotify = await spotifyClient.search(searchInfo, authorizationInfo)
+        let albumsSpotify = await spotifyClient.search(searchInfo, req.authorizationInfo)
 
         let albumsDb = await saveAlbumsOnDb(albumsSpotify);
 
         res.send({ ok: true, error: null, data: albumsDb });
-    } catch (error) {
-        res.send({ ok: false, error: error, data: null });
+    }
+    catch (error) {
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        throw(error);
     }
 }
 
@@ -36,7 +39,7 @@ const saveAlbumsOnDb = async (albumsSpotify) => {
         for (let i = 0; i < length; i++) {
             let albumSpotify = albumsSpotify.albums.items[i];
 
-            var albumDb = await models.albums.findOne({ where: { id: albumSpotify.id } });
+            var albumDb = await models.albums.findOne({ where: { lala: albumSpotify.id } });
             if (!albumDb) {
                 albumDb = models.albums.build();
             }
@@ -62,7 +65,7 @@ const saveAlbumsOnDb = async (albumsSpotify) => {
         return albumsDb;
     }
     catch (error) {
-        console.log(error);
-
+        error.statuscode = 500;
+        throw error;
     }
 }

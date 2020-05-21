@@ -2,15 +2,24 @@ const config = require('config');
 const express = require('express');
 const http = require('http');
 
+const routerAlbum = require('./routes/albumRoutes');
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const server = express();
 
-const routerAlbum = require('./routes/album');
 server.use(routerAlbum);
+
+server.use((err, req, res, next) => {
+  if (!err.statusCode) {
+    err.statusCode = 500;
+  }
+  res.status(err.statusCode).send({ ok: false, error: err.message, data: null })
+})
 
 const serverHttp = http.createServer(server);
 server.use(express.json());
+
 
 serverHttp.listen(3000, () => {
   const host = serverHttp.address().address;
