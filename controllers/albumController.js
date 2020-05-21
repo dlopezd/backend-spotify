@@ -39,7 +39,7 @@ const saveAlbumsOnDb = async (albumsSpotify) => {
         for (let i = 0; i < length; i++) {
             let albumSpotify = albumsSpotify.albums.items[i];
 
-            var albumDb = await models.albums.findOne({ where: { lala: albumSpotify.id } });
+            var albumDb = await models.albums.findOne({ where: { id: albumSpotify.id } });
             if (!albumDb) {
                 albumDb = models.albums.build();
             }
