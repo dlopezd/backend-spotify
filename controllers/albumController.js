@@ -4,8 +4,14 @@ const spotifyClient = require('../services/spotifyClient');
 const { models } = require('../data_access/sequelize');
 
 
-exports.find = async (req, res) => {
+exports.find = async (req, res, next) => {
     try {
+
+        if(!req.query.q) {
+            let error =  new Error("Parámetros no válidos");
+            error.statusCode = 400;
+            throw error;
+        }
 
         const searchInfo = {
             q: req.query.q,
@@ -24,7 +30,7 @@ exports.find = async (req, res) => {
         if (!error.statusCode) {
             error.statusCode = 500;
         }
-        throw(error);
+        next(error);
     }
 }
 
