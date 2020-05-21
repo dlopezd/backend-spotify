@@ -7,7 +7,9 @@ var path = require('path');
 const sequelize = new Sequelize( process.env.DATABASE_URL,    
     {
         dialect: config.db.dialect,
-        ssl: true,
+        ssl: {
+            rejectUnauthorized: false
+        },
         dialectOptions: {
             decimalNumbers: true,
             ssl: { require: true }

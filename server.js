@@ -4,8 +4,6 @@ const http = require('http');
 
 const routerAlbum = require('./routes/albumRoutes');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 const server = express();
 
 server.use(routerAlbum);
