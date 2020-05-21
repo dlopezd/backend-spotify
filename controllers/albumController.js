@@ -1,5 +1,3 @@
-const NodeCache = require("node-cache");
-
 const spotifyClient = require('../services/spotifyClient');
 const { models } = require('../data_access/sequelize');
 
@@ -29,7 +27,7 @@ exports.find = async (req, res, next) => {
     }
     catch (error) {
         console.error(`[albumController.find] param:${JSON.stringify(searchInfo)} error:${error.message}`);
-        
+
         if (!error.statusCode) {
             error.statusCode = 500;
         }
