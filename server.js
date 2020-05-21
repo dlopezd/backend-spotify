@@ -2,6 +2,8 @@ const config = require('config');
 const express = require('express');
 const http = require('http');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 const routerAlbum = require('./routes/albumRoutes');
 
 const server = express();
