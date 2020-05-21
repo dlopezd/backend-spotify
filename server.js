@@ -19,7 +19,7 @@ const serverHttp = http.createServer(server);
 server.use(express.json());
 
 
-serverHttp.listen(3000, () => {
+serverHttp.listen(80, () => {
   const host = serverHttp.address().address;
   const port = serverHttp.address().port;
   console.log('Server run at http://%s:%s', host, port);
