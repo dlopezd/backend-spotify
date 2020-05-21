@@ -4,20 +4,14 @@ const config = require('config');
 var fs = require('fs');
 var path = require('path');
 
-const sequelize = new Sequelize(
-    config.db.database,
-    config.db.user,
-    config.db.password,
+const sequelize = new Sequelize( process.env.DATABASE_URL,    
     {
-        host: config.db.host,
         dialect: config.db.dialect,
         ssl: true,
         dialectOptions: {
             decimalNumbers: true,
             ssl: { require: true }
-        },
-        port: config.db.port,
-        "ssl": true, "dialectOptions": { "ssl": { "require": true } }
+        }
     }
 );
 
